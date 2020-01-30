@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Control Switch</string>
+    <string name="nav_header_title">Switch</string>
+    <string name="nav_header_subtitle">ruedag.jp@gmail.com</string>
+    <string name="nav_header_desc">Contact Developer</string>
+    <string name="action_settings">Save Settings</string>
+
+    <string name="switch_on">ON</string>
+    <string name="switch_off">OFF</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_information">Information</string>
+    <string name="menu_settings">Set up device</string>
+
+
+    <string-array name="timer_array">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+</resources>
