@@ -8,16 +8,18 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.example.controlswitch.Helpers.ConectionHelper;
 import com.example.controlswitch.Helpers.RespuestaSwitch;
-import com.example.controlswitch.MainActivity;
 import com.example.controlswitch.R;
 import com.example.controlswitch.Services.BatteryDaemon;
 
@@ -34,10 +36,23 @@ public class Home extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 
     private RespuestaSwitch state;
-    private OnFragmentInteractionListener mListener;
     int valor_timer;
+    private Handler handler;
+    private SharedPreferences sharedPref;
 
-    SharedPreferences sharedPref;
+    private RadioGroup rg_switch1;
+    private RadioGroup rg_switch2;
+
+    //RadioButtons
+    private RadioButton rb_switch1on;
+    private RadioButton rb_switch1off;
+
+    private RadioButton rb_switch2on;
+    private RadioButton rb_switch2off;
+
+    private ProgressBar progressBar;
+
+    private LinearLayout containerSwitchs;
     public Home() {
         // Required empty public constructor
     }
@@ -59,13 +74,12 @@ public class Home extends Fragment {
                 "control_switch", Context.MODE_PRIVATE);
 
         valor_timer=sharedPref.getInt("timer_value",1);
-        try{
-            state =new ConectionHelper().execute("/").get();
-            Log.i("prueba",state.toString());
-        }
-        catch(Exception e){
+    }
 
-        }
+    @Override
+    public void onResume() {
+        super.onResume();
+        //this.connect();
     }
 
     @Override
@@ -74,42 +88,35 @@ public class Home extends Fragment {
         // Inflate the layout for this fragment
         View v= inflater.inflate(R.layout.fragment_home, container, false);
 
-        RadioGroup rg_switch1= v.findViewById(R.id.switch1);
-        RadioGroup rg_switch2= v.findViewById(R.id.switch2);
+        progressBar=v.findViewById(R.id.progressBarHome);
 
-        RadioButton rb_switch1on= v.findViewById(R.id.switch1on);
-        RadioButton rb_switch1off= v.findViewById(R.id.switch1off);
+        //RadioGroups
+        rg_switch1= v.findViewById(R.id.switch1);
+        rg_switch2= v.findViewById(R.id.switch2);
 
-        RadioButton rb_switch2on= v.findViewById(R.id.switch2on);
-        RadioButton rb_switch2off= v.findViewById(R.id.switch1off);
+        //RadioButtons
+        rb_switch1on= v.findViewById(R.id.switch1on);
+        rb_switch1off= v.findViewById(R.id.switch1off);
 
-        rg_switch1.setOnCheckedChangeListener(null);
-        rg_switch2.setOnCheckedChangeListener(null);
+        rb_switch2on= v.findViewById(R.id.switch2on);
+        rb_switch2off= v.findViewById(R.id.switch2off);
 
-        if(state.chargerisOn()){
-            rb_switch1on.setChecked(true);
-        }else{
-            rb_switch1off.setChecked(true);
-        }
+        containerSwitchs=v.findViewById(R.id.linearLayoutContainerGroups);
 
-        if(state.fanisOn()){
-            rb_switch2on.setChecked(true);
-        }else{
-            rb_switch2off.setChecked(true);
-        }
+        this.connect();
 
         rg_switch1.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if(checkedId==R.id.switch1on){
-                    //turn on
+                    //Toast.makeText(getContext(),"Prendido",Toast.LENGTH_SHORT).show();
                     new ConectionHelper().execute("/chargerOn");
-                    Intent msgIntent = new Intent(getContext(), BatteryDaemon.class);
-                    getActivity().sendBroadcast(msgIntent);
+                    Intent msgIntent = new Intent(getActivity(), BatteryDaemon.class);
+                    getActivity().startService(msgIntent);
                 }else{
                     //turn off
                     new ConectionHelper().execute("/chargerOff");
-                    getActivity().stopService(new Intent(getContext(),BatteryDaemon.class));
+                    getActivity().stopService(new Intent(getActivity(),BatteryDaemon.class));
                 }
             }
         });
@@ -132,7 +139,6 @@ public class Home extends Fragment {
     }
 
 
-
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -148,4 +154,40 @@ public class Home extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
+    public void connect(){
+        HandlerThread thread = new HandlerThread("HandlerThread");
+        thread.start();
+        handler=new Handler(thread.getLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run () {
+                try{
+                    state =new ConectionHelper().execute("/").get();
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressBar.setVisibility(View.INVISIBLE);
+                            containerSwitchs.setVisibility(View.VISIBLE);
+                            if(state.chargerisOn()){
+                                rb_switch1on.setChecked(true);
+                            }else{
+                                rb_switch1off.setChecked(true);
+                            }
+
+                            if(state.fanisOn()){
+                                rb_switch2on.setChecked(true);
+                            }else{
+                                rb_switch2off.setChecked(true);
+                            }
+                        }
+                    });
+
+                }
+                catch(Exception e){
+
+                }
+            }
+        });
+    }
 }
+

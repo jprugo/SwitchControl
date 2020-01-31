@@ -11,6 +11,15 @@
     <string name="menu_home">Home</string>
     <string name="menu_information">Information</string>
     <string name="menu_settings">Set up device</string>
+    <string name="fan_on">The fan will be turned off in: </string>
+    <string name="fan_off">The fan is turned off</string>
+    <string name="fan_status">Fan status</string>
+    <string name="charger">Charger</string>
+    <string name="fan">Fan</string>
+    <string name="maximum_charge_level">maximum charge level</string>
+    <string name="timer_value">Timer value</string>
+    <string name="arrow_drop_image">ARROW DROP IMAGE</string>
+
 
 
     <string-array name="timer_array">

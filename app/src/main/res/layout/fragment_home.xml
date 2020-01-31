@@ -9,134 +9,149 @@
     <!-- TODO: Update blank fragment layout -->
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <ProgressBar
+        android:id="@+id/progressBarHome"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/linearLayoutContainerGroups"
+        app:layout_constraintStart_toStartOf="@+id/linearLayoutContainerGroups"
+        app:layout_constraintTop_toTopOf="@+id/linearLayoutContainerGroups" />
+
+    <LinearLayout
+        android:id="@+id/linearLayoutContainerGroups"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
         android:orientation="vertical"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.345"
-        >
+        app:layout_constraintVertical_bias="0.345">
 
-        <TextView
+        <LinearLayout
+            android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:textSize="24dp"
-            android:text="Cargador"
-            ></TextView>
-        <RadioGroup
-            android:checkedButton="@+id/switch1off"
-            android:id="@+id/switch1"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_marginBottom="@dimen/margin_medium"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
-            android:layout_marginTop="@dimen/margin_medium"
-            android:background="@drawable/paint_out_line"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
-            <RadioButton
-                android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp"
-                android:layout_marginLeft="1dp"
-                android:id="@+id/switch1on"
-                android:background="@drawable/toggle_background"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:button="@null"
-                android:gravity="center"
-                android:text="@string/switch_on"
-                android:textColor="@color/white" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/charger"
+                android:textAlignment="center"
+                android:textSize="24sp"></TextView>
 
-            <RadioButton
-                android:layout_marginRight="1dp"
-                android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp"
-                android:id="@+id/switch1off"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/toggle_background"
-                android:button="@null"
-                android:gravity="center"
-                android:text="@string/switch_off"
-                android:textColor="@color/white" />
-        </RadioGroup>
-    </LinearLayout>
+            <RadioGroup
+                android:id="@+id/switch1"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:layout_marginRight="50dp"
+                android:layout_marginBottom="@dimen/margin_medium"
+                android:background="@drawable/paint_out_line"
+                android:checkedButton="@+id/switch1off"
+                android:orientation="horizontal">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.545"
-        >
+                <RadioButton
+                    android:id="@+id/switch1on"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginBottom="1dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/toggle_background"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="@string/switch_on"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
 
-        <TextView
+                <RadioButton
+                    android:id="@+id/switch1off"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginBottom="1dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/toggle_background"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="@string/switch_off"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
+            </RadioGroup>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:textSize="24dp"
-            android:text="Ventilador"
-            ></TextView>
+            android:orientation="vertical">
 
-        <RadioGroup
-            android:checkedButton="@+id/switch2off"
-            android:id="@+id/switch2"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_marginBottom="@dimen/margin_medium"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
-            android:layout_marginTop="@dimen/margin_medium"
-            android:background="@drawable/paint_out_line"
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/fan"
+                android:textAlignment="center"
+                android:textSize="24sp"></TextView>
 
-            android:orientation="horizontal">
+            <RadioGroup
+                android:id="@+id/switch2"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:layout_marginRight="50dp"
+                android:layout_marginBottom="@dimen/margin_medium"
+                android:background="@drawable/paint_out_line"
+                android:checkedButton="@+id/switch2off"
 
-            <RadioButton
-                android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp"
-                android:layout_marginLeft="1dp"
-                android:id="@+id/switch2on"
-                android:background="@drawable/toggle_background"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:button="@null"
-                android:gravity="center"
-                android:text="@string/switch_on"
-                android:textColor="@color/white" />
+                android:orientation="horizontal">
 
-            <RadioButton
-                android:layout_marginRight="1dp"
-                android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp"
-                android:id="@+id/switch2off"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/toggle_background"
-                android:button="@null"
-                android:gravity="center"
-                android:text="@string/switch_off"
-                android:textColor="@color/white"
+                <RadioButton
+                    android:id="@+id/switch2on"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginBottom="1dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/toggle_background"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="@string/switch_on"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
 
-                />
-        </RadioGroup>
+                <RadioButton
+                    android:id="@+id/switch2off"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginBottom="1dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/toggle_background"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="@string/switch_off"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+
+                    />
+            </RadioGroup>
+
+        </LinearLayout>
 
     </LinearLayout>
-
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

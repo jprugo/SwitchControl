@@ -6,10 +6,20 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
+import com.example.controlswitch.Helpers.ConectionHelper;
+import com.example.controlswitch.Helpers.RespuestaSwitch;
 import com.example.controlswitch.R;
 
 /**
@@ -30,8 +40,14 @@ public class Information extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    private RespuestaSwitch state;
     private OnFragmentInteractionListener mListener;
-
+    private Animation rotateAnimation;
+    private ImageView fanView;
+    private TextView textViewInfo;
+    private TextView textViewNumber;
+    private Handler handler;
+    private ProgressBar progressBar;
     public Information() {
         // Required empty public constructor
     }
@@ -61,13 +77,30 @@ public class Information extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //this.connect();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_information, container, false);
+        View v= inflater.inflate(R.layout.fragment_information, container, false);
+
+        progressBar=v.findViewById(R.id.progressBarInfo);
+
+        fanView=v.findViewById(R.id.imageViewFan);
+        textViewInfo=v.findViewById(R.id.textView_fan_legend);
+        textViewNumber=v.findViewById(R.id.textView_timer);
+
+        this.connect();
+
+        return v;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -91,5 +124,43 @@ public class Information extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+    private void StartAnimation(){
+        rotateAnimation= AnimationUtils.loadAnimation(getContext(),R.anim.rotate);
+        rotateAnimation.setRepeatCount(Animation.INFINITE);
+        fanView.startAnimation(rotateAnimation);
+    }
+    public void connect(){
+        HandlerThread thread = new HandlerThread("HandlerThread");
+        thread.start();
+        handler=new Handler(thread.getLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run () {
+                try{
+                    state =new ConectionHelper().execute("/").get();
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressBar.setVisibility(View.INVISIBLE);
+                            textViewInfo.setVisibility(View.VISIBLE);
+                            fanView.setVisibility(View.VISIBLE);
+                            if(state.fanisOn()){
+                                StartAnimation();
+                                textViewInfo.setText(R.string.fan_on);
+                                textViewNumber.setText(" "+(state.getTimer()/60)+" minutes");
+                            }else{
+                                fanView.setImageResource(R.drawable.fan_off);
+                                textViewInfo.setText(R.string.fan_off);
+                            }
+                        }
+                    });
+
+                }
+                catch(Exception e){
+
+                }
+            }
+        });
     }
 }
