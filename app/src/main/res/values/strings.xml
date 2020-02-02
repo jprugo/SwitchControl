@@ -19,7 +19,8 @@
     <string name="maximum_charge_level">maximum charge level</string>
     <string name="timer_value">Timer value</string>
     <string name="arrow_drop_image">ARROW DROP IMAGE</string>
-
+    <string name="channel_name">BatteryDaemon</string>
+    <string name="channel_description">Use this channel to show notifications in this app</string>
 
 
     <string-array name="timer_array">
