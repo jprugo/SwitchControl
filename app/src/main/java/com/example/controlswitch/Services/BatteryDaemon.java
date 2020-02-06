@@ -11,8 +11,7 @@ import android.os.AsyncTask;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Handler;
-import android.util.Log;
-import android.widget.Toast;
+
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -22,6 +21,7 @@ import androidx.core.app.NotificationManagerCompat;
 import com.example.controlswitch.Helpers.ConectionHelper;
 import com.example.controlswitch.R;
 import com.example.controlswitch.Receivers.PowerConnectionReceiver;
+import com.example.controlswitch.Receivers.Restarter;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -37,6 +37,7 @@ public class BatteryDaemon extends IntentService {
     private SharedPreferences sharedPref;
 
 
+
     //Receiver
     private PowerConnectionReceiver mBatInfoReceiver = new PowerConnectionReceiver();
 
@@ -49,8 +50,8 @@ public class BatteryDaemon extends IntentService {
     protected void onHandleIntent(@Nullable Intent intent) {
         /*if (intent !=null && intent.getExtras()!=null){
         }*/
-
     }
+
 
     public BatteryDaemon() {
         super("BatteryDaemon");
@@ -63,6 +64,17 @@ public class BatteryDaemon extends IntentService {
         sharedPref = getApplicationContext().getSharedPreferences(
                 "control_switch", Context.MODE_PRIVATE);
         max_percentage=sharedPref.getInt("percentage_alert", 90);
+        createNotificationChannel();
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(getBaseContext(),CHANNEL_ID).setSmallIcon(R.drawable.battery90_icon)
+                    .setContentTitle("Checking battery status")
+                    .setContentText("Control switch is checking your battery level")
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getBaseContext());
+
+            // notificationId is a unique int for each notification that you must define
+            notificationManager.notify(0, builder.build());
         final Handler handler = new Handler();
         final Timer timer = new Timer();
         TimerTask doAsynchronousTask = new TimerTask() {
@@ -76,6 +88,16 @@ public class BatteryDaemon extends IntentService {
                             if(batteryIsFull==true){
                                 new ConectionHelper().execute("/chargerOff");
                                 timer.cancel();
+                                NotificationCompat.Builder builder = new NotificationCompat.Builder(getBaseContext(),CHANNEL_ID).setSmallIcon(R.drawable.battery90_icon)
+                                        .setContentTitle("Full battery")
+                                        .setContentText("switch off")
+                                        .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+
+                                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getBaseContext());
+
+                                // notificationId is a unique int for each notification that you must define
+                                notificationManager.notify(0, builder.build());
                             }
                         } catch (Exception e) {
                             // TODO Auto-generated catch block
@@ -90,6 +112,10 @@ public class BatteryDaemon extends IntentService {
     @Override
     public void onDestroy() {
         unregisterReceiver(mBatInfoReceiver);
+        Intent broadcastIntent = new Intent();
+        broadcastIntent.setAction("restartservice");
+        broadcastIntent.setClass(this, Restarter.class);
+        this.sendBroadcast(broadcastIntent);
         super.onDestroy();
     }
 
@@ -116,17 +142,7 @@ public class BatteryDaemon extends IntentService {
                 }
             }
 
-            /*createNotificationChannel();
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(getBaseContext(),CHANNEL_ID).setSmallIcon(R.drawable.battery90_icon)
-                    .setContentTitle("Checking battery status")
-                    .setContentText("Control switch is cehcking your battery level")
-                    .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
-
-            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getBaseContext());
-
-            // notificationId is a unique int for each notification that you must define
-            notificationManager.notify(0, builder.build());*/
 
             return isFull;
         }
